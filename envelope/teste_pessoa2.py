@@ -11,7 +11,7 @@ import tempfile
 import unittest
 
 from gerar_chaves import gerar_par
-from rsaAss import (
+from envelope.rsa_assinatura import (
     ErroCripto, assinar, carregar_chave_privada, carregar_chave_publica,
     cifrar_chave_sessao, codificar, decifrar_chave_sessao, verificar_assinatura,
 )
