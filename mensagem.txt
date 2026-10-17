@@ -1,0 +1,2 @@
+Mensagem de teste do Envelope Digital Assinado - UFPI.
+Segurança em Sistemas Computacionais: acentuação funciona (ç, ã, é).
