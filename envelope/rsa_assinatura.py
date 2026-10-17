@@ -10,15 +10,14 @@ class ErroCripto(Exception):
     pass
 
 def codificar(dados, codificacao):
-    try:
-        if codificacao == "Base64":
-            return base64.b64encode(dados).decode("ascii")
-        elif codificacao == "Hex":
-            return dados.hex()
-        else:
-            raise ErroCripto(f"Codificação '{codificacao}' não suportada. Use 'Base64' ou 'Hex'.")
-    except(binascii.Error, ValueError):
-        raise ErroCripto(f"Caracteres inválidos.")
+    if not isinstance(dados, bytes):
+        raise ErroCripto("codificar espera bytes, não texto.")
+    if codificacao == "Base64":
+        return base64.b64encode(dados).decode("ascii")
+    elif codificacao == "Hex":
+        return dados.hex()
+    else:
+        raise ErroCripto(f"Codificação '{codificacao}' não suportada. Use 'Base64' ou 'Hex'.")
 
 def decodificar(texto, codificacao):
     if codificacao not in ("Base64", "Hex"):
@@ -54,8 +53,12 @@ def carregar_chave_publica(caminho):
                          f"Verifique se não passou a chave privada no lugar.")
 
 def carregar_chave_privada(caminho):
-    with open(caminho, "rb") as f:
-        dados = f.read()
+    try:
+        with open(caminho, "rb") as f:
+            dados = f.read()
+    except FileNotFoundError:
+        raise ErroCripto(f"Caminho {caminho} não encontrado")
+    
     try:
         return serialization.load_pem_private_key(dados, password=None)
     except ValueError:
